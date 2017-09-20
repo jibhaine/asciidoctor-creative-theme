@@ -1,0 +1,10 @@
+
+# IDE project files
+.idea
+.settings
+.classpath
+“ common output dirs
+out/
+gen/
+bin/
+target/
