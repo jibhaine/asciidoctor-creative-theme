@@ -7,27 +7,29 @@
 Bonjour,
 
 En mettant à jour le D.A.T, ceci m'a semblé important / à partager :
-Correspondance du découpage en module / connecteurs vers objets de données.
-( Les lignes en commentaires ne sont pas implémentées)
+
+C'est la correspondance du découpage en module / connecteurs / package et des objets de donnée vers les termes métier
+( Les lignes en commentaires ne sont pas implémentées )
 
 
 
 Les différents composants de la solution adoptent un découpage en domaines métiers, liés aux connecteurs, qui est le suivant :
 
-/security
-/tenants
-/licenses
-/farms
-/library
-/settings
-/rations
-/engine
-/parser
+/security : Sécurité
+/tenants  : Entités
+/licenses : Licenses
+/farms    : Elevages
+/library  : Aliments/Mélange/Catalogues
+/settings : Paramétrage
+/rations  : Rations
+/engine   : Moteur de calcul
+/parser   : Parseur d'annexes
+/i18n     : traductions
 
-détails :
+détails des objets de chaque package :
 
-    // * accounts : connecteur permettant de synchroniser des comptes auprès d'un connecteur d'authentification externe (§openauth, ldap).
-    * security : les utilisateurs et les profils au sein du rationneur
+    // * accounts :         connecteur permettant de synchroniser des comptes auprès d'un connecteur d'authentification externe (§openauth, ldap).
+    * security :            les utilisateurs et les profils au sein du rationneur
       1. User : utilisateur
       2. Profile : Profil (super admin, éleveur, utiilisateur, etc...) contients des droits.
       3. Feature : Droit d'utilisation. (instance de FeatureCode sur un profil)
@@ -35,7 +37,7 @@ détails :
     * tenants : les entités
       1. Tenant : occupant/locataire de l'application
     * licenses : les licenses d'utilisation.
-      1. LicenseFile : Fichier de license, contitne une liste de droits (Feature) et de catégorie animales (AnimalCategory)
+    //  1. LicenseFile : Fichier de license, contitne une liste de droits (Feature) et de catégorie animales (AnimalCategory)
       2. License : license installée dans l'application, répartie sur des entités.
     * farms : élevage, regroupe les élevage et les informations des animaux
       1. Farm : élevage
@@ -46,10 +48,10 @@ détails :
       2. Food : aliment (lié, copié ou fantôme)
       3. Mixture : un mélange est un aliment contenant des ingrédients.
       4, Ingredient: composant d'un mélange (aliment + pourcentage de répartition).
-      3. Level : Niveau d'aliment (Sous catégories, de 1 à 9, permettent de filtrer les aliments)
-      4. LevelConstraint : contraintes extraites du catalogue inra
-      4. SubCategories : niveaux // et liaison avec les traductions.
-      5. ErrorLog : erreurs d'import du catalogue inra.
+      5. Level : Niveau d'aliment (Sous catégories, de 1 à 9, permettent de filtrer les aliments)
+      6. LevelConstraint : contraintes extraites du catalogue inra, définit les niveaux possibles d'aliment.
+      7. SubCategories : niveaux // et liaison avec les traductions.
+      8. ErrorLog : erreurs d'import du catalogue inra.
     * settings : le paramétrage de l'application par entité et par catégorie animale
       1. Characteristic : Caractéristiques
         a. FoodCharacteristic : d'aliments
@@ -69,8 +71,8 @@ détails :
     * rations  : les rations, les aliments de rations, et le stockage des résultats du moteur de calcul.
       1. Ration :
         a. RationDetail : encapsule les différents résultats d'appel au moteur ou les différents type de ration (à l'auge ou moyenne)
-        b. RationFood : un aliment de ration et ses valeurs, créé depuis les aliments.
-        c. RationCharValue : résultat d'un calcul.
+          a.1 RationFood : un aliment de ration et ses valeurs( quantités pourcentages), créé depuis les aliments.
+          a.2. RationCharValue : résultat d'un calcul. du moteur
         d. Context : le contexte de la ration, en fonction de la catégorie animale.
       2, Context :
         a. .rubrics : rubrique de contexte.
@@ -80,16 +82,17 @@ détails :
       2. adapters : adaptateurs entre les données du rationneur et les caractéristiques du moteur INRA.
       3. formula : parseur de formules / expressions mathématiques.
 
-Coté back uniquement
+Coté back uniquement (rationneur-core et rationneur-connector-zero)
     * api : objets de transfert et interfaces de connecteur/services.
-    * utils/config : packages de configuration
+    * utils
+    `config : packages de configuration de chaque module (core/data)
     * parser : Lecteurs d'annexes, extrait le paramétrage initial du domaine 'settings' depuis les annexes.
       1. foodChar : Caractéristique d'aliments.
       2. rationChar : Caractéristique de rations.
       3. inraCatalog : Catalogue INRA (traductions, niveaux etc...)
       4. rubricConfigs : Rubriques de contexte
 
-Coté front uniquement :
+Coté front uniquement (rationneur-ui) :
 
     * global : services partagés
       1. Message : alertes flash de succès erreur: réussite en haut à droite.
@@ -99,7 +102,6 @@ Coté front uniquement :
       2. layout
     * components : librairie internes de conmposants léger / transverse
     * services : couche de services / modèle pour le front.
-
 
 En continuant comme ça dans le reste à faire :
 
@@ -113,6 +115,11 @@ En continuant comme ça dans le reste à faire :
   1. Translation (traduction ((langue + clé) = libellé)
   2. TranslationEntry (clé + liaison avec les traductions par langage + type d'objet/ de champ à traduire)
 
+On doit retouvez ce découpage en domaines/package, à terme :
+
+ui : Dans le module 'app.services'
+core : Dans le package com.siel.rationneur.core.domains
+data : Dans le package com.siel.rationneur.data.connector
 
 == UI
 
