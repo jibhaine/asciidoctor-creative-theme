@@ -43,7 +43,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+                    <sourceDirectory>src/asciidoc</sourceDirectory>
                     <!-- Attributes common to all output formats -->
                     <attributes>
                         <sourcedir>${project.build.sourceDirectory}</sourcedir>

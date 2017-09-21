@@ -10,20 +10,22 @@ En mettant à jour le D.A.T, ceci m'a semblé important / à partager, avant que
 
 C'est la correspondance du découpage en module / connecteurs / package et des objets de donnée vers les termes métier :
 
+aka le plan de la partie architecture logique / métier :
+
 ««
 
 Les différents composants de la solution adoptent un découpage en domaines métiers, liés aux connecteurs, qui est le suivant :
 
-/security : Sécurité
-/tenants  : Entités
-/licenses : Licences
-/farms    : Elevages
-/library  : Aliments/Mélanges/Catalogues
-/settings : Paramétrage
-/rations  : Rations
-/engine   : Moteur de calcul
-/parser   : Parseur d'annexes
-/i18n     : Traductions
+* /security : Sécurité
+* /tenants  : Entités
+* /licenses : Licences
+* /farms    : Elevages
+* /library  : Aliments/Mélanges/Catalogues
+* /settings : Paramétrage
+* /rations  : Rations
+* /engine   : Moteur de calcul
+* /parser   : Parseur d'annexes
+* /i18n     : Traductions
 
 détails des objets de chaque package :
 
@@ -31,105 +33,110 @@ détails des objets de chaque package :
 
 |Package|Object|Description|
 
-    // * accounts :         connecteur permettant de synchroniser des comptes auprès d'un connecteur d'authentification externe (§openauth, ldap).
-    * security           les utilisateurs et les profils au sein du rationneur
-      1. User : utilisateur
-      2. Profile : Profil (super admin, éleveur, utiilisateur, etc...) contients des droits.
-      3. Feature : Droit d'utilisation. (instance de FeatureCode sur un profil)
-    // ` UserSettings : préférences d'un utilisateur (entêtes de colonnes etc)
-    * tenants : les entités
-      1. Tenant : occupant/locataire de l'application
-    * licenses : les licenses d'utilisation.
-    //  1. LicenseFile : Fichier de license, contient une liste de droits (Feature) et de catégorie animales (AnimalCategory)
-      2. License : license installée dans l'application, répartie sur des entités.
-    * farms : élevage, regroupe les élevage et les informations des animaux
-      1. Farm : élevage
-      2. AnimalHerd : animal d'un troupeau
-    //  3, Herd : (troupeau/lot) subdivision des animaux.
-    * library : les aliments, les mélanges et les catalogue d'aliments.
-      1. Catalog : catalogues d'aliment.
-      2. Food : aliment (lié, copié ou fantôme)
-      3. Mixture : un mélange est un aliment contenant des ingrédients.
-      4, Ingredient: composant d'un mélange (aliment + pourcentage de répartition).
-      5. Level : Niveau d'aliment (Sous catégories, de 1 à 9, permettent de filtrer les aliments)
-      6. LevelConstraint : contraintes extraites du catalogue inra, définit les niveaux possibles d'aliment.
-      7. SubCategories : niveaux // et liaison avec les traductions.
-      8. ErrorLog : erreurs d'import du catalogue inra.
-    * settings : le paramétrage de l'application par entité et par catégorie animale
-      0. AnimalCategory / ProductionType (enums) : type de production et catégorie animale.
-      1. Characteristic : Caractéristiques
-        a. FoodCharacteristic : d'aliments
-          1. par type d'aliment : FoodCharSettings
-        b. RationCharacteristic : de rations
-          2. par type de ration : RationCharSettings
-      2. RubricConfig : Rubriques de contexte
-      3. InraCatalog : Catalogue inra, objet de transfert utilisé pour l'import
-        a. LevelConstraints : Contraintes de niveaux
-        b. SubCategories : Traduction des libellés
-        c. Aliments d'origine
-       4.Strategy : Stratégies : influence les entrée du moteur selon le poids ou la semaine de lactation de l'animal
-         a. StrategyLine : Ligne de stratégie _ valeur par colonne.
-         b. StrategyColumnKey: Entête de colonne de stratégie.
-       5. ScreenConfig : Configurations des caractéristiques affiches en fonction des zones d'écran
-       6, RegionalData : Données régionales (module paturage)
-    * rations  : les rations, les aliments de rations, et le stockage des résultats du moteur de calcul.
-      1. Ration :
-        a. RationDetail : encapsule les différents résultats d'appel au moteur ou les différents type de ration (à l'auge ou moyenne)
-          a.1 Liste de RationFood : un aliment de ration et ses valeurs( quantités pourcentages), créé depuis les aliments.
-          a.2. Liste de RationCharValue : résultat d'un calcul du moteur
-        d. Context : le contexte de la ration, en fonction de la catégorie animale.
-      2, Context :
-        a. .rubrics : rubrique de contexte.
-        b. RubricKey / RubricValueType : un contexte est une liste de clé / valeurs basé sur les settings.RubricConfig
+// * accounts :         connecteur permettant de synchroniser des comptes auprès d'un connecteur d'authentification externe (§openauth, ldap).
+* security           les utilisateurs et les profils au sein du rationneur
+  1. User : utilisateur
+  2. Profile : Profil (super admin, éleveur, utiilisateur, etc...) contients des droits.
+  3. Feature : Droit d'utilisation. (instance de FeatureCode sur un profil)
+// ` UserSettings : préférences d'un utilisateur (entêtes de colonnes etc)
+* tenants : les entités
+  1. Tenant : occupant/locataire de l'application
+* licenses : les licenses d'utilisation.
+//  1. LicenseFile : Fichier de license, contient une liste de droits (Feature) et de catégorie animales (AnimalCategory)
+  2. License : license installée dans l'application, répartie sur des entités.
+* farms : élevage, regroupe les élevage et les informations des animaux
+  1. Farm : élevage
+  2. AnimalHerd : animal d'un troupeau
+//  3, Herd : (troupeau/lot) subdivision des animaux.
+* library : les aliments, les mélanges et les catalogue d'aliments.
+  1. Catalog : catalogues d'aliment.
+  2. Food : aliment (lié, copié ou fantôme)
+  3. Mixture : un mélange est un aliment contenant des ingrédients.
+  4. Ingredient: composant d'un mélange (aliment + pourcentage de répartition).
+  5. Level : Niveau d'aliment (Sous catégories, de 1 à 9, permettent de filtrer les aliments)
+  6. LevelConstraint : contraintes extraites du catalogue inra, définit les niveaux possibles d'aliment.
+  7. SubCategories : niveaux // et liaison avec les traductions.
+  8. ErrorLog : erreurs d'import du catalogue inra.
+* settings : le paramétrage de l'application par entité et par catégorie animale
+  1. AnimalCategory / ProductionType (enums) : type de production et catégorie animale.
+  2. Characteristic : Caractéristiques
+    * FoodCharacteristic : d'aliments
+      * par type d'aliment : FoodCharSettings
+    * RationCharacteristic : de rations
+      * par type de ration : RationCharSettings
+  3. RubricConfig : Rubriques de contexte
+  4. InraCatalog : Catalogue inra, objet de transfert utilisé pour l'import
+    a. LevelConstraints : Contraintes de niveaux
+    b. SubCategories : Traduction des libellés
+    c. Aliments d'origine
+  5.Strategy : Stratégies : influence les entrée du moteur selon le poids ou la semaine de lactation de l'animal
+     a. StrategyLine : Ligne de stratégie _ valeur par colonne.
+     b. StrategyColumnKey: Entête de colonne de stratégie.
+  6. ScreenConfig : Configurations des caractéristiques affiches en fonction des zones d'écran
+  7, RegionalData : Données régionales (module paturage)
+* rations  : les rations, les aliments de rations, et le stockage des résultats du moteur de calcul.
+  1. Ration :
+    a. RationDetail : encapsule les différents résultats d'appel au moteur ou les différents type de ration (à l'auge ou moyenne)
+      a.1 Liste de RationFood : un aliment de ration et ses valeurs( quantités pourcentages), créé depuis les aliments.
+      a.2. Liste de RationCharValue : résultat d'un calcul du moteur
+    d. Context : le contexte de la ration, en fonction de la catégorie animale.
+  2, Context :
+    a. .rubrics : rubrique de contexte.
+    b. RubricKey / RubricValueType : un contexte est une liste de clé / valeurs basé sur les settings.RubricConfig
 
 Coté back uniquement (rationneur-core et rationneur-connector-zero)
 
-    * commons.api : objets de transfert (Data), interfaces de connecteur/services, et énumérations/types de valeur.
-      * constants : enumerations
-    * commons.utils : outils communs
-    * engine : l'appel du moteur de calcul INRA, moteur d'analyse des formules de calcul.
-      1. EngineCallContext : Les paramètres d'entrée de l'application à un instant T.
-      2. adapters : adaptateurs entre les données du rationneur et les caractéristiques du moteur INRA.
-      3. formula : parseur de formules / expressions mathématiques.
-    * config : packages de configuration de chaque module (core/data)
-    // * batch : import de catalogue inra/ utilisateur etc...
-    // * search : moteur de recherche et d'indexation d'aliments.
-    * tools.(.*)ÈxcelParser : Lecteurs d'annexes, extrait le paramétrage initial du domaine 'settings' depuis les annexes.
-      1. foodChar : Caractéristique d'aliments. (annexe 1)
-      2. rationChar : Caractéristique de rations. (annexe 6)
-      3. inraCatalog : Catalogue INRA (traductions, niveaux etc...)
-      4. rubricConfigs : Rubriques de contexte (annexe 3
+* commons.api : objets de transfert (Data), interfaces de connecteur/services, et énumérations/types de valeur.
+  * constants : enumerations
+* commons.utils : outils communs
+* engine : l'appel du moteur de calcul INRA, moteur d'analyse des formules de calcul.
+  1. EngineCallContext : Les paramètres d'entrée de l'application à un instant T.
+  2. adapters : adaptateurs entre les données du rationneur et les caractéristiques du moteur INRA.
+  3. formula : parseur de formules / expressions mathématiques.
+* config : packages de configuration de chaque module (core/data)
+// * batch : import de catalogue inra/ utilisateur etc...
+// * search : moteur de recherche et d'indexation d'aliments.
+* tools.(.*)ÈxcelParser : Lecteurs d'annexes, extrait le paramétrage initial du domaine 'settings' depuis les annexes.
+  1. foodChar : Caractéristique d'aliments. (annexe 1)
+  2. rationChar : Caractéristique de rations. (annexe 6)
+  3. inraCatalog : Catalogue INRA (traductions, niveaux etc...)
+  4. rubricConfigs : Rubriques de contexte (annexe 3
 
 Coté front uniquement (rationneur-ui) :
 
-    * global : services partagés, démarrage angular
-      1. Message : alertes flash de succès erreur: réussite en haut à droite.
-      2. hooks : intercepteurs d'états et de requètes http.
-    * main : lanceur / coquille de l'application
-      1. header/footer
-      2. layout/modal
-    * components : librairie internes de conmposants léger / transverse
-    * services : couche de services / modèle pour le front.
+* global : services partagés, démarrage angular
+  1. Message : alertes flash de succès erreur: réussite en haut à droite.
+  2. hooks : intercepteurs d'états et de requètes http.
+* main : lanceur / coquille de l'application
+  1. header/footer
+  2. layout/modal
+* components : librairie internes de conmposants léger / transverse
+* services : couche de services / modèle pour le front.
 
 En continuant comme ça dans le reste à faire :
 
-    * pcg : module pcg
-      // todo
-      PcgRubricConfig : sous classe de RubricConfig, paramétrage de rubrique lié uniquement à la Vache Laitière
-      PcgContext : Comme les contexte de ration mais pour les pcg. (réutilisez les composants de rubriques =)
-    * pasture : module pâturage
-      1. PastureInfos : calqué avec les enums en entrée du moteur.
-    * i18n : connecteur technique, gère(rait) les traductions des différents libellés (évolution import de catalogue)
-      1. Translation (traduction ((langue + clé) = libellé)
-      2. TranslationEntry (clé + liaison avec les traductions par langage + type d'objet/ de champ à traduire)
+* pcg : module pcg
+  // todo
+  PcgRubricConfig : sous classe de RubricConfig, paramétrage de rubrique lié uniquement à la Vache Laitière
+  PcgContext : Comme les contexte de ration mais pour les pcg. (réutilisez les composants de rubriques =)
+* pasture : module pâturage
+  1. PastureInfos : calqué avec les enums en entrée du moteur.
+* i18n : connecteur technique, gère(rait) les traductions des différents libellés (évolution import de catalogue)
+  1. Translation (traduction ((langue + clé) = libellé)
+  2. TranslationEntry (clé + liaison avec les traductions par langage + type d'objet/ de champ à traduire)
 
 On doit retouvez ce découpage en domaines/package, à terme :
 
+* api : dans le package .data
 * ui : Dans le module 'app.services'
 * core : Dans le package com.siel.rationneur.core.domains
 * data : Dans le package com.siel.rationneur.data.connector
 
 Convention : pour les objets, on retrouvera pour chacun ( en remplacant 'Item', et si on part d'une entité isolée qui a son propre module :
+
+api:
+* ItemConnector.java (interface)
+* ItemData.java
 
 ui:
 
@@ -138,18 +145,25 @@ ui:
 * itemCreate.component.js
 * itemUpdate.component.js
 * itemDetail.component.js
+* itemDetail.html
+* itemDetail.scss
 + sous composants
 
-api:
-* ItemConnector.java (interface)
-* ItemData.java
-
 core:
-
-ItemResource
+* ItemModel
+* ItemResource
+* ItemService
+* ItemServiceImpl
+* ItemModelRepository
+* ItemModelMapper
+* ItemConnectorClient : client HTTP (implémente ItemConnector)
 
 data:
-Item
+* Item (entité jpa/hibernate)
+* ItemRepository (DAO spring-data)
+* ItemDataMapper (mapstruct Entity - Data)
+* ItemConnectorService (implémente ItemConnector)
+* ItemConnectorResource
 
 == UI
 
