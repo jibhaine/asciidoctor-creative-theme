@@ -1,0 +1,24 @@
+== Architecture physique : Base de données
+
+La couche connecteur zéro se base sur du mapping objet/relationnel pour fournir à la solution des données potentiellement issus de systèmes d'information différents.
+
+L'implémentation sur une base de données SQL fournie permets d'utiliser les systèmes de BDD suivants :
+
+SGBDSQl gérés par  Hibernate 5.x :
+
+
+Chaque profil / sgbd /base de données supporté par le rationneur fait l'objet d'un profil spring :
+
+example (seul db-mysql est supporté et testé pour l'instant)
+
+* db-mysql : profil de connection a une base de donénes MysqL/MariaDB
+* db-pgsql : profil de connection a une base postgres.
+* db-sqlserver : profil de connection a une base microsoft SQLServer
+* db-oracle : profil de connection a une base oracle db DB
+
+=== Configuration BDD connecteur zéro.
+
+Chaque système de gestion de base de données du connecteur zéro est paramétrable par un fichier de configuration de profil.
+
+==== JPA 2 / Hibernate
+

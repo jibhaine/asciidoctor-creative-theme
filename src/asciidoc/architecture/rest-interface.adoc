@@ -1,0 +1,49 @@
+== Echanges de données.
+
+=== Format des dates
+
+Les dates sont échangées au format ISO-8601 complet :
+
+
+Il est de la responsabilité des clients d'envoyer leur bonne zone, sous peine de bugs.
+
+
+
+
+=== JSON / Objets java
+
+La sérialization java / json est fournie par jackson.
+
+Les options de base utilisées par le rationneur :
+
+§ date en ISO
+
+=== HTTP/ 1.0
+
+==== Entêtes HTTP custom.
+
+Pour faciliter l'échange de données entre core et connecteurs, le rationneur envoie les informations suivantes dans des entêtes HTTP personnalisées :
+
+===== X-Rationneur-requestId
+
+Lors d'une requète au core, un identifiant de requète est attribué au client.
+Cette identifiant est transmis aux connecteur dans les entêtes HTTP custom
+
+format : UUID
+
+===== X-Rationneur-tenantId
+
+L'identifiant d'entité, doit permettre de filtrer les données selon l'entité.
+
+format : UUID
+
+==== Verbes HTTP
+
+Attentions, certains proxies bloquent les requètes PATCH ou PUT, ou DELETE qui sont utilisés.
+
+GET : récupération
+POST : création / envoi de données
+PUT : mise à jour
+DELETE : suppression
+PATCH : mise à jour partielle
+OPTIONS : informations sur la resource.

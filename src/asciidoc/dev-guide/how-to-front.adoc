@@ -1,0 +1,20 @@
+== HowTo - front-end
+
+=== Routage
+
+
+=== Composants
+
+=== Couche service / store
+
+Le module angular 'app.services' fournit le modèle de données aux composants front.
+
+
+
+
+=== Tableaux de données
+
+Les tableaux de données complexes sont déléguès au composant ag§grid :
+
+
+=== Niveaux de logs

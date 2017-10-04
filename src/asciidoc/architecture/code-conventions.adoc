@@ -1,0 +1,167 @@
+== Conventions de code.
+
+=== Communes :
+
+==== Encodage / Espacement
+
+Privilégier, pour tous les fichiers :
+
+- L'encodage UTF-8
+- 4 espaces pour une tabulation.
+
+Pour le reste, suivre les recommandations des outils ESlint et SonarQube
+
+==== Complexité cyclomatique
+
+Métrique importante à prendre en compte.
+
+Si votre composant / service utilise plus de 4/5 paramètres d'entrée
+il va être difficile à reprendre / comprendre.
+
+==== Code smell.
+
+=== Par langage
+
+===== Javascript : ESLint :
+
+aggrège les règles de :
+
+* syntaxe javascript
+
+vérifications principales :
+
+* typage javascript
+
+Le typage javascript est fournit par la couche `model.js
+`conventions angular
+
+* bonnes pratiques / etc (nombres de parametres de fonctions, syntax)
+
+===== Java : SonarQube :
+
+aggrègre des règles de héritées :
+
+**
+
+
+==== Conventions de commit :
+
+Les messages de commit adoptent la convention suivante :
+
+// todo rappel page git wiki. conventions de commit
+
+==== Workflow git :
+
+La branche develop est la branche de travail principal, elle diuoit être déployable/testable à tout moment (pas d'erreur de compil, pas d'erreur de syntaxe)
+
+La branche master est livrable en validation / et ou au client à tout moment.( + insertion sur une bdd vide ok)
+
+Les autres branches sont des branches de travail :
+
+===== Nommage des branches
+
+On suit les conventions de git flow pour le nommage des branches  :
+
+* feature/ma-branche : pour les nouveaux développements/fonctionalités.
+* hotfix/mantis-42 : pour les mantis externes (rester sur la branche develop ou de feature pour les corrections de bug internes)
+* refacto/ma-branche : pour les gros chantiers de refonte.
+* release/vX.X.X : pour les livraisons incrémentales bi-hebdomadaires (pas fait)
+
+Pour le process global :
+
+Mécanisme de branche.
+
+Si un changement nécéssite plusieurs commits, d'être partagé indépendemment ,
+Les fusions de branches en local doivent se faire en mode rebase. (git pull --rebase)
+
+
+
+==== Niveaux de logs :
+
+La stratégie de log applicatifs de l'application est la suivante :
+
+Utilise SL4J coté back-end, le service $log d'AngularJS coté front-end.
+
+Ces deux APIs permettent de spécifier le niveau de log de manière unifiée,
+quelque soit, le serveur d'application coté java, ou le navigateur coté ui :
+
+trace() : bas-niveau : affiche les données, demande du calcul / transformation supplémentaires par rapoprt à un fonctionnement normal de l'application.
+debug() : niveau développeur : affiche les infos de passage dans une fonction avec les identifiants de chaque entité/table en base.
+info() : informations visible par tous. example Global, j'ai démarré. la page a chargé, tout va bien, positif.
+warn() : cas d'erreur aux limites, n'empèchant pas l'application de fonctionner.
+error() : problème bloquant (formulaire invalide, requète REST incorrecte, règle métier, erreur technique etc).
+
+=== Java :
+
+==== API
+
+
+==== Annotations / Spring
+
+- Spring :
+
+* @Resource
+* @Service
+* @Component
+* @Repository
+
+- Spring mvc / resource :
+
+* @RequestParam
+
+- Feign
+
+* @RequestLine
+* @Param
+
+=== Maven
+
+
+==== Build
+
+==== Run
+
+
+
+=== Logging
+
+===== Slf4j : facade de log.
+
+L'application utilise la facade de log SLF4J pour toutes ses traces applicatives.
+
+Cela permets :
+
+* de s'abstraire du mécanisme de log utilisé par la plate-forme cible (fichier, console, stockage en base etc...)
+
+* D'utiliser une interface de programmation unifiée au sein du code java.
+
+Logger statique de classe :
+
+Chaque classe utilisant le log doit définir en membre statique un LOGGER.
+
+example :
+
+```java
+    private static final Logger LOGGER = LoggerFactory.getLogger(MaClass.class);
+```
+
+==== Javascript
+
+===== Eslint
+
+Eslint utilise le preset de règles par défaut pour ES6 avec des règles AngularJS.
+
+Elles concernents :
+
+===== Syntaxe
+
+Chaque service renvoie des objets modèle de données eslint.
+
+===== Injection par nom de variables
+
+Les variables préfixées par $ sont injectées par angular.
+
+Un mécanisme de build () transforme les annotations øngInject en tableau plus fonctions :
+
+examples
+

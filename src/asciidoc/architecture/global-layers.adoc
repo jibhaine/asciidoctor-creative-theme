@@ -1,0 +1,99 @@
+=== Couches applicatives.
+
+L'application est découpée en plusieurs couche applicatives dans chaque sous-système :.
+
+Dans les examples suivant, chaque  classe / fichier sont présentées pour un objet de modèle abstrait 'Item' :
+
+==== api
+
+Cette couche est la plus abstraite et présente les services et objets de données devant être fournis par les connecteurs.
+C'est aussi la plus importante car elle contient la documentation d'api, et conditionne les implémentations des sous§systèmes.
+Elle est liée au trois autres sous-systèmes.
+
+* ItemData :
+- doit être une version objet du modèle fourni par les connecteurs.
+- Aucune fonction logique, uniquement des données sérializables.
+
+* ItemConnector : interface de service implémentée par :
+   a. Les clients http coté core (ConnectorClient).
+   b. les services d'accès aux données coté connector ()
+
+* constantes / ItemType
+
+les types métiers, enums/constants (exemple ItemType, listes figées,  valeurs de champs) etc...
+les énumérations doivent être la source unique de données de référence pour les clés de traductions
+les types de valeurs manipulées par les connecteurs.
+
+
+==== connector-zero :
+
+[plantuml, global-connector-zero-classes, png]
+....
+class ItemConnectorResource
+class ItemConnectorService
+class ItemRepository
+class ItemEntity
+
+ItemEntity <- ItemRepository
+ItemRepository <|-- ItemConnectorService
+ItemConnectorService <|-- ItemConnectorResource
+....
+
+* Item(Connector)Resource.java
+* ItemConnectorService.java : service logique, implémentant l'interface Connector commune,
+* Item(Connector)Repository.java : interface d'accès aux données, utilisant spring-data, permet de simplifier l'écriture de requètes.
+* Item(Entity).java : entité hibernate/PA, représente  liée a une table en base.
+
+
+==== core
+
+* ItemModel.java
+- objets de transfert sérializables en JSON entre ui et core (formulaires, objets de données)
+- doivent permettre de rattacher des objets Data de connecteurs différents.
+
+* ItemResource.java :
+- service REST spring (@RestController)
+- s'occupe du mapping .json et des premières vérifications d'entrées utilisateur / techniques / validation / authentification basique)
+- appelle les services métier
+
+* Service.java / et package` .service.: service CRUD standard pour accéder aux objets.
+- pour éviter de surchager les services et favoriser la réutilisation et la testabilité, découpez les fonctioons techniques ou logiques en @Component spring dont le nommage est libres.
+- nommage plus libre pour ces composant mais préférez des noms parlant (ItemValidator : valideur d'aliment, ItemÈxcelParser : lecteur)
+
+* ItemConnectorClient.java :client HTTP basé sur Feign mappé sur les services REST offerts par les connecteurs.
+
+* ItemModelMapper : transforme des objets Data en Model
+* ItemModelRepository :
+couche intermédiaire d'accès aux données, s'occupe :
+- de l'appel au client http des connecteur.
+- de l'appel au mapper pour transformer les Data en Model.
+- de la mise en cache par annotations de ses retours de données.
+
+
+==== ui
+
+* item.model.js : objet de transfert de données, contient un mapping (souple) des objets *Model.java et des fonctions de logique métier liées à ces données.
+* item.service.js :
+- classe ecmascript de service, à déclarer en tant que service dans angular.
+- s'occupe des échanges rest avec le core (ou le stockage de donnée local). fournit des fonctions CRUD (create, retrieve (q
+- fournit des données aux états (resolve) et aux composants, dans des Promesses javascript (Promise).
+- privilégier un nommage Store pour les services fournissant des données liée à un objet de donnée / Service pour les autres fonctions logique.
+les services renvoient des promesses, résolues, soit par ui-router lors des transitions d'états, soit par les composants lors d'appel direct.
+
+
+* item.component.js : composant, logique ou graphique.
+
+- logique / routé (soit lié à un état, ou pré-filtre les données selon le mode d'éxécution pour les composants plus génériques.
+-- example un écran itemDetail.component est appelé par un itemCreate.
+--
+- les autres : lie un template angular html, du scss pour l'apparence et de la logique d'entrée sortie.
+-- simple ou stupide (read-only) : s'abonne à des données en entrée.
+-- 'à logiceu
+
+*.directive.js : directives techniques angular, pour tout ce qui est accès direct au dom/ attributs réutilisables entre composants / api générale)
+
+*.spec.js : test unitaire lié au composant ou au service (exemples : item.service.spec.js, item.model.spec).
+* items.module.js :
+- importe les autres composants / états et les déclare au sein d'un module angular.
+* items.states.js :
+- déclarations d'états ui-router, connecte les comportements de navigation / changements d'url
